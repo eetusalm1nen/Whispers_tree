@@ -1,16 +1,16 @@
-# Hajautetut ohjelmistojärjestelmät 2023 harjoitustyö: Rikkinäinen puhelin 
+# Hajautetut ohjelmistojärjestelmät harjoitustyö: Rikkinäinen puhelin 
 
 ## Oppimistavoitteet ja tehtävärunko
 
 Harjoitustyössä harjoitellaan verkkosovelluksen toteutusta, jolloin aihepiirit pyörivät verkon ja verkkokommunikaation ympärillä. Myös säikeitä käytetään johtuen tarpeesta hallita useaa asiakasta. Harjoitus pohjautuu valmiiseen ohjelmarunkoon, johon ryhmän tehtävänä on täydentää puuttuvat osat.
 
-Ohjelmarunko käyttää JavaFX-kirjastoa graafisen käyttöliittymänsä toteutukseen. Harjoitustyön tekemiseen ei kuitenkaan tarvita JavaFX-osaamista, sillä graafinen ympäristö on annettu valmiina ja pääasiassa abstraktoitu pois tehtävän toteutuksesta.
+Ohjelmarunko käyttää JavaFX-kirjastoa graafisen käyttöliittymänsä toteutukseen. Harjoitustyön tekemiseen ei kuitenkaan tarvita JavaFX-osaamista, sillä graafinen ympäristö on annettu valmiina ja pääasiassa abstraktoitu pois tehtävän toteutuksesta. Käyttöliittymistä riittää ymmärtää, että käyttöliittymän tulee jatkuvasti silmukassa käsitellä käyttäjäsyötettä ja sen perusteella piirtää näytettävään ikkunaan sisältöä. Jos tämä silmukka pysähtyy, käyttöliittymä jämähtää, eikä vastaa käyttäjälle.
 
 Työn pohja on Maven-projekti (https://maven.apache.org/). Kurssilla ei vaadita Maven-osaamista, mutta palautettavan version on käynnistyttävä oikein komentoriviltä Mavenia käyttäen. Mikäli Maven-konfiguraatiota tai ohjelmarungon struktuuria ei muuta, ongelmia ei pitäisi ilmentyä. Ohjeet työn ajamiseen Eclipsessä ovat Moodlen puolella.
 
 ## Tehtävän aihe ja toimintaperiaate
 
-Toisen työn aiheena on rikkinäinen puhelin. Perinteisen rikkinäisen puhelimen säännöt ovat melko selkeät: tarvitaan joukko ihmisiä jonomaisessa muodostelmassa. Jonon alkupäässä oleva henkilö keksii sanan tai lauseen. Tämä lause välitetään jonon toiseen päähän kuiskaamalla se aina seuraavan henkilön korvaan. Viesti saattaa muuttaa muotoaan matkalla joko väärintulkinnan tai jonon jäsenien mielikuvituksen vuoksi.
+Työn aiheena on rikkinäinen puhelin. Perinteisen rikkinäisen puhelimen säännöt ovat melko selkeät: tarvitaan joukko ihmisiä jonomaisessa muodostelmassa. Jonon alkupäässä oleva henkilö keksii sanan tai lauseen. Tämä lause välitetään jonon toiseen päähän kuiskaamalla se aina seuraavan henkilön korvaan. Viesti saattaa muuttaa muotoaan matkalla joko väärintulkinnan tai jonon jäsenien mielikuvituksen vuoksi.
 
 Tässä työssä rikkinäinen puhelin tuodaan nykyaikaan vertaisverkkopohjaisella ratkaisulla, jossa ihmiset on korvattu ohjelmilla, jotka välittävät TCP-verkkosokettien avulla toisilta saamiaan viestejä eteenpäin toisillensa. Vertaisverkolla tässä kohtaa tarkoitetaan sitä, että samassa ohjelmassa on niin palvelintoiminnallisuus, kuin asiakaspuolikin ja ennen kaikkea ohjelmat yhdistävät toisiin samanlaisiin ohjelmiin -- eli ei ole erillistä palvelinohjelmaa ja asiakasohjelmaa, vaan yhdistävä ja yhdeistettävä ohjelma ovat molemmat samoja ohjelmia, joita on vain useita samaan aikaan käynnissä. Vertaisverkossa yksittäistä verkkoon liittynyttä ohjelmainstanssia kutsutaan tämän vuoksi *vertaisiksi* (engl. peer).
 

@@ -9,7 +9,7 @@ import java.util.Arrays;
  * A ring buffer loops around itself, overwriting the oldest
  * values after filling up its capacity.
  * 
- * Used by Resolver to quarantee idempotency on multi-interface hosts
+ * Used by Resolver to guarantee idempotency on multi-interface hosts
  * No need to use in assignment
  */
 public class RingBuffer<E> {

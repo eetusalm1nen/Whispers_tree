@@ -4,13 +4,13 @@
 
 In this assignment we will be practicing establishing and managing network connections. Threads play a large role in networking as well as there is a requirement to serve multiple clients concurrently. The assignment will be done using the provided program skeleton: you will need to implement the missing parts of the program.
 
-The game utilizes JavaFX library to provide the graphical user interface. Knowledge on JavaFX is not required to complete the exercise though.
+The game utilizes JavaFX library to provide the graphical user interface. Knowledge on JavaFX is not required to complete the exercise though. The only necessary thing to understand about graphical UI's is that they are essentially a giant loop that will handle user events and draw the window contents depending on the user actions. If you block the UI thread, the graphical UI stops responding.
 
 The project template is a Maven project (https://maven.apache.org/). You do not need to configure the Maven project yourself but using the provided Maven configuration is required: the submission must compile and run using Maven command line interface. If the directory structure is not altered too much, there should be no problems.
 
 ## Topic and Description
 
-The topic for the second exercise is ["Whispers"](https://en.wikipedia.org/wiki/Chinese_whispers) also known as "broken telephone", "telephone game" or "Chinese whispers" in English. The rules for traditional broken telephone are simple: We need a bunch of people standing in line-like formation. The first person on the line whispers a word or a sentence to the person next to them. This person relays the whisper to the person next to him/her and so on. Due to not hearing the sentence perfectly or just deliberately altering it, the message changes along the way and it may not sound anything like in the beginning when it finally reaches the end of the line.
+The topic for the exercise is ["Whispers"](https://en.wikipedia.org/wiki/Chinese_whispers) also known as "broken telephone", "telephone game" or "Chinese whispers" in English. The rules for traditional broken telephone are simple: We need a bunch of people standing in line-like formation. The first person on the line whispers a word or a sentence to the person next to them. This person relays the whisper to the person next to him/her and so on. Due to not hearing the sentence perfectly or just deliberately altering it, the message changes along the way and it may not sound anything like in the beginning when it finally reaches the end of the line.
 
 In this exercise the traditional broken telephone will be upgraded to the "network-age" by using a peer-to-peer networking architecture. Instead of people whispering to each other, we have applications communicating and relaying messages over TCP sockets. As the application works on peer-to-peer principle, it contains both, the client and server components to communicate with other *peers*, there is no separate client and server applications - there are just multiple instances of the same application running and each of them connect to each other.
 
@@ -85,8 +85,6 @@ After starting the root node, other peers can be connected to the network by pre
 ### Packages App.java and fi.utu.tech.telephonegame.ui
 
 App.java is the main class of the program. It contains the main method, as well as the startup of some services. The UI package contains classes related to the operation of the graphical user interface.
-
-App.java on ohjelman pääluokka, joka sisältää main-metodin, sekä joidenkin palveluiden käynnistyksen. Pakkaus UI sisältää graafiseen käyttöliitymän toimintaan liittyvät luokat.
 
 These classes should not be modified. There is neither need to call methods of these classes directly. We assume that the participants of this course have no experience in user interface programming and the UI part has been mostly abstracted away.
 

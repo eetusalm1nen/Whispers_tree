@@ -11,7 +11,7 @@
         <jdk.version>17</jdk.version>
         <maven.compiler.source>${jdk.version}</maven.compiler.source>
         <maven.compiler.target>${jdk.version}</maven.compiler.target>
-        <javafx.version>17.0.2</javafx.version>
+        <javafx.version>17.0.13</javafx.version>
     </properties>
     <dependencies>
         <dependency>
