@@ -6,7 +6,7 @@ Harjoitustyössä harjoitellaan verkkosovelluksen toteutusta, jolloin aihepiirit
 
 Ohjelmarunko käyttää JavaFX-kirjastoa graafisen käyttöliittymänsä toteutukseen. Harjoitustyön tekemiseen ei kuitenkaan tarvita JavaFX-osaamista, sillä graafinen ympäristö on annettu valmiina ja pääasiassa abstraktoitu pois tehtävän toteutuksesta. Käyttöliittymistä riittää ymmärtää, että käyttöliittymän tulee jatkuvasti silmukassa käsitellä käyttäjäsyötettä ja sen perusteella piirtää näytettävään ikkunaan sisältöä. Jos tämä silmukka pysähtyy, käyttöliittymä jämähtää, eikä vastaa käyttäjälle.
 
-Työn pohja on Maven-projekti (https://maven.apache.org/). Kurssilla ei vaadita Maven-osaamista, mutta palautettavan version on käynnistyttävä oikein komentoriviltä Mavenia käyttäen. Mikäli Maven-konfiguraatiota tai ohjelmarungon struktuuria ei muuta, ongelmia ei pitäisi ilmentyä. Ohjeet työn ajamiseen Eclipsessä ovat Moodlen puolella.
+Työn pohja on Maven-projekti (https://maven.apache.org/). Kurssilla ei vaadita Maven-osaamista, mutta palautettavan version on käynnistyttävä oikein komentoriviltä Mavenia käyttäen. Mikäli Maven-konfiguraatiota tai ohjelmarungon struktuuria ei muuta, ongelmia ei pitäisi ilmentyä. Ohjeet työn ajamiseen IntelliJ Ideassa sekä Eclipsessä ovat Moodlen puolella.
 
 ## Tehtävän aihe ja toimintaperiaate
 
