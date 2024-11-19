@@ -46,16 +46,16 @@ public class MessageBroker extends Thread {
 	}
 
 	/**
-	 * Processes message 
+	 * Processes a message 
 	 * 
-	 * In the the process method you need to:
-	 * 1. Test the type of the incoming object
-	 * 2. Keep track of messages that are alredy processed by this node
-	 * 3. Show the incoming message in the received message text area (GuiIO)
-	 * 4. Change the text and the color using the Refiner class
-	 * 5. Set the new color to the color area (see GuiIO)
-	 * 6. Show the refined message in the refined message text area (GuiIO)
-	 * 7. Return the processed message
+	 * In the the process method you need to at least:
+	 * 
+	 * - Test the type of the incoming object
+	 * - Keep track of messages that are alredy processed by this node
+	 * - Refine the message
+	 * - Increase hop count by one
+	 * - Show the received and refined message along with hop count in graphical UI (see GuiIO)
+	 * - Return the processed message
 	 * 
 	 * @param procMessage The object to be processed
 	 * 
@@ -106,7 +106,7 @@ public class MessageBroker extends Thread {
 	/**
 	 * Wraps the String into a new Message object
 	 * and adds it to the sending queue to be processed by the network component
-	 * Called when sending a new message
+	 * Called when composing a new message
 	 * @param text The text to be wrapped and sent
 	 */
 	public void send(String text) {

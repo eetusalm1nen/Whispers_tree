@@ -60,13 +60,4 @@ public class Refiner {
 	}
 
 
-	/*
-	 * This method changes the color. No editing needed.
-	 *
-	 * The color hue value is an integer between 0 and 360
-	 */
-	public static Integer refineColor(Integer inColor) {
-		return (inColor + 20) < 360 ? (inColor + 20) : 0;
-	}
-
 }

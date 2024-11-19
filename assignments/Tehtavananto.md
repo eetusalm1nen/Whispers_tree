@@ -38,7 +38,7 @@ Resolver on rakennettu siten, että vertaisten yhdistäessä toisiinsa verkon yl
 
 Esimerkiksi yllä olevassa binääripuugraafissa, jossa vertaiset on kuvattu solmuina, mikäli 2. solmu päättäisi lähettää uuden viestin muille solmuille, lähettäisi se viestin kaikille naapureilleen: solmu 4:lle, solmu 5:lle sekä juurisolmulle (1. solmu). Juurisolmu muokkaisi viestin haluamakseen ja edelleenlähettäisi sen solmulle 3. Jos taas solmu 3 päättäisi puolestansa lähettää **uuden** viestin, lähettäisi se sen ensin ainoalle naapurillensa, juurisolmulle, joka puolestansa lähettäisi viestin (muuteltuna) 2. solmulle, joka puolestansa tekisi omat muutoksensa ja lähettäisi muutetun viestin solmuille 4 ja 5. Tällä tavoin viesti propagoituisi ympäri verkkoa solmulta toiselle aina hieman muuttuen. Huomaa, että kuvassa nuolet **eivät** edelleenkään tarkoita, mihin suuntaan viestejä lähetetään, vaan sitä, mikä solmu on yhdistänyt mihinkin solmuun (ts. asiakas -> palvelin -suhde).
 
-Mikäli ohjelmaa ajetaan ns. localhost-tilassa, Resolver ketjuttaa vertaiset yksinkertaiseen jonomuodostelmaan binääripuun sijaan.
+Mikäli ohjelmaa ajetaan ns. **localhost-tilassa, Resolver ketjuttaa vertaiset yksinkertaiseen jonomuodostelmaan** binääripuun sijaan.
 
 Tehtävää tehdessä Resolverin toiminnasta ei tarvitse erityisesti välittää -- tehtäväpohjassa on mukana tarvittavat koodirivit, jolla resolverilta saadaan tarvittavat tiedot yhdistämistä varten.
 
@@ -46,10 +46,17 @@ Tehtävää tehdessä Resolverin toiminnasta ei tarvitse erityisesti välittää
 
 ![Main window](images/UI.png "Käyttöliittymä ohjelman käynnistyessä.")
 
+Käyttöliittymä voidaan jakaa kolmeen pääosaan: verkkoyhdistysasetukset, chat-viestilaatikko sekä uuden viestin lähettäämiseen vaadittava alin rivi.
 
-Käyttöliittymän vasemmassa laidassa oleva värialue kuvaa viestin etenemistä verkossa. Uuden viestin lähettäjällä ruutu muuttuu punaiseksi ja viestin edetessä verkossa, jokaisen verkon solmun värin tulisi erota edellisestä solmusta muuttuen värispektissä asteittain kohti sinistä. Eli mitä kauemmas viesti kulkee lähettäjästä, sen "kylmemmäksi" väri muuttuu.
+Verkkoyhteysasetuksia käytetään kun halutaan valita, miten vertaisverkkoon yhdistetään. Tästä lisää myöhemmin.
 
-Ikkunan keskimmäisen sarakkeen *received* ja *refined* tekstialueet näyttävät verkosta saapuneen viestin sisällön ennen ja jälkeen kyseisen verkon solmun tekemää muutosta. Mikäli verkkoon haluaa lähettää uuden viestin, tulisi sen onnistua *Write New Message* -kohtaan kirjoittamalla ja *Send new Message* -painiketta painamalla.
+Käyttöliittymän chat-viestilaatikko koostuu kaikista viesteistä, joita ohjelmasta on lähetetty tai joita se on välittänyt. Vasemmalla oleva pallura kertoo, kuinka monen vertaisen kautta viesti on kulkenut ennen saapumistaan nykyiselle vertaiselle ("hypyt"). Arvo 0 tarkoittaa luonnollisesti, että viesti on lähetetty alun perin tästä vertaisesta käsin. Palluran väri myös vaihtuu pikku hiljaa lämpimän punaisesta siniseen päin, mitä useampia vertaisia on ollut välissä.
+
+*Received*-kuplassa pitäisi näkyä viesti sellaisena kun se oli solmulle saapuessa ja *Sent*-kuplassa puolestaan viesti sellaisena kun se solmulta lähti (muokattuna) muille naapureille. Uutta viestiä lähettäessä vastaanotettua viestiä ei tietysti ole, jolloin *Received*-kuplassa näkyy *(none)*
+
+Kuvakaappauksessa oleva sovellus on lähettänyt yhden uuden viestin (Hello!) itse sekä, vastaanottanut, muokannut ja edelleenlähettänyt toisen viestin ("No terveppä terve").
+
+Mikäli verkkoon haluaa lähettää uuden viestin, tulisi sen onnistua *Write New Message* -kohtaan kirjoittamalla ja *Send message* -painiketta painamalla.
 
 
 ### Network-valinnat
@@ -100,7 +107,7 @@ Refiner-luokassa on metodit, joihin voidaan määrittää, miten vastaanotettuje
 
 ### Message.java
 
-Message-luokan olioiden tulisi sisältää itse viestisisältö (teksti), sekä viestin "väri", sekä mahd. metodit näiden muokkaamiseksi. Jokaisella viestillä on myös oma ID-tunnisteensa. Message-luokan olioita käytetään viestien välittämiseen verkon yli. Tämän vuoksi Message-luokan täytyy implementoida eräs rajapinta, ennen kuin siitä luotuja olioita voidaan välittää verkon ylitse käyttäen oliovirtoja.
+Message-luokan olioiden tulisi sisältää itse viestisisältö (teksti), tieto siitä, monessako vertaisessa viesti on jo käynyt (hypyt), sekä mahd. metodit näiden muokkaamiseksi. Jokaisella viestillä on myös oma ID-tunnisteensa. Message-luokan olioita käytetään viestien välittämiseen verkon yli. Tämän vuoksi Message-luokan täytyy implementoida eräs rajapinta, ennen kuin siitä luotuja olioita voidaan välittää verkon ylitse käyttäen oliovirtoja.
 
 Vinkki: Messagen ID:tä pystyy käyttämään edelleenlähetyksen estoon: mikäli samalla id-tunnisteella merkattu viesti vastaanotetaan uudelleen, sen voinee heittää roskiin...
 
@@ -137,10 +144,10 @@ Sanomattakin selvää, että tämän luokan kirjoittaminen on suuri osa työn su
 	- Muutokset tehdään NetworkService-luokkaan, sekä omiin tarpeellisiksi näkemiinne uusiin luokkiin network-pakkauksen sisässä (monisäikeistetyn palvelimen perusluokkia)
 - Muokatkaa Message-luokkaa siten, että
 	- Se on lähetettävissä verkon ylitse käyttäen `ObjectOutputStream`-luokkaa
-	- Lisätkää luokkaan myös tarpeellisia attribuutteja, jotta Message-luokan oliossa voidaan lähettää viestin tekstisisältö tekstijonona ja väri kokonaislukuna. Tämän lisäksi jokaisella viestillä on oltava jokin UUID-pohjainen tunnistetieto, jotta vertaiset tunnistavat, josko kyseinen viesti on jo heidän luonaan käynyt.
+	- Lisätkää luokkaan myös tarpeellisia attribuutteja, jotta Message-luokan oliossa voidaan lähettää viestin tekstisisältö merkkijonona sekä ylläpitää tietoa, kuinka monessa vertaisessa viesti on käynyt (hyppyjen määrä). Tämän lisäksi jokaisella viestillä on oltava jokin UUID-pohjainen tunnistetieto, jotta vertaiset tunnistavat, josko kyseinen viesti on jo heidän luonaan käynyt.
 - Toteuttakaa MessageBrokerin metodit, jotka noutavat Network-komponenttinne verkosta vastaanottamat oliot MessageBrokerin puolelle ja käsitelkää vastaanotetut Message-oliot siten, että
-	1) Viesti ja väri muokataan Refinerissä
-	2) Vastaanotettu viesti sekä muokattu viesti ja väri näkyvät käyttöliittymässä
+	1) Viesti muokataan Refinerissä
+	2) Vastaanotettu viesti, muokattu viesti sekä hyppyjen määrä näkyvät käyttöliittymässä
 	3) Muokattu viesti lähetetään kaikille naapureille Network-rajapintaa hyödyntäen
 		- Kerran lähetettyä viestiä ei käsitellä enää uudelleen, eikä lähetetä edelleen (Message-luokan id-arvo auttanee tässä)
 - Toteuttakaa Refiner-luokan viestinmuutosmetodi mutatoimaan viestien tekstisisältöä (Valinnainen)

@@ -25,35 +25,16 @@ public class GuiIO {
 		this.controller = controller;
 	}
 
-	
 	/**
-	 * Set the text in the Received message text area
+	 * Add message to the list of messages shown in user interface 
 	 * 
-	 * @param text Text to be shown in "Received message" text box
+	 * @param receivedMessage The received message before it was refined
+	 * @param refinedMessage The refined message which will be sent to neighbours
+	 * @param hopCount The amount of hops the message has taken so far to reach this node
 	 */
-	public void setReceivedMessage(String text) {
-		controller.setReceivedMessage(text);
+	public void addMessageToChatBox(String receivedMessage, String refinedMessage, Integer hopCount) {
+		controller.addMessage(receivedMessage, refinedMessage, hopCount);
 	}
-
-	
-	/**
-	 * Set the text in the Refined message text area
-	 * 
-	 * @param text Text to be shown in "Refined message" text box
-	 */
-	public void setRefinedMessage(String text) {
-		controller.setRefinedMessage(text);
-	}
-	
-	/**
-	 * Change the color of the color area on the GUI
-	 * 
-	 * @param value Color to be shown on the GUI in range 0-360
-	 */
-	public void setSignal(Integer value) {
-		controller.setSignal(value);
-	}
-
 	
 	// Method below this point are not needed in the assignment. They are only used by the templete.
 	

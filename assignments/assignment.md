@@ -37,7 +37,7 @@ The resolver is built in such a way that when peers connect to each other over t
 
 For example, in the binary tree graph above, where peers are represented as nodes, if node 2 decided to send a new message to the other nodes, it would send the message to all its neighbours: node 4, node 5 and the root node (node 1). The root node would modify the message as it desires, and then forward it to node 3. If in turn, node 3 decided to send a **new** message, it would first send it to its only neighbour, the root node, which would send the message (as modified) to node 2, which would make its own changes and send the modified message to nodes 4 and 5. In this way, the message would propagate around the network from node to node, always slightly modified. Note that in the figure, the arrows **still** do not indicate which direction the messages are sent, but rather which node is connected to which node (i.e. the client -> server relationship).
 
-If the program is run in localhost mode, Resolver chains the peers in a simple queue format instead of a binary tree.
+If the program is run **in localhost mode, Resolver chains the peers in a simple queue format** instead of a binary tree.
 
 When completing the exercise, you don't need to care much about the Resolver's implementation -- the template includes the necessary lines of code to get the necessary information from the resolver for connecting other peers.
 
@@ -45,9 +45,18 @@ When completing the exercise, you don't need to care much about the Resolver's i
 
 ![Main window](images/UI.png "UI after starting the application has been launched.")
 
-The colour bar on the left of the interface shows the progress of the message on the network. When a new message is sent, the box turns red and as the message progresses through the network, each node in the network should change colour gradually towards blue in the colour spectrum. In other words, the furher away the message gets from the sender, the "colder" the color becomes.
+The graphical user interface can be divided into three main parts: connection settings, chat message box and the last textbox for composing new messages.
 
-The *received* and *refined* text areas in the middle column of the window show the content of the incoming message from the network before and after the modifications are made by the specific network node. If a new message is to be sent to the network, it should be sent by typing in *Write New Message* text area and by pressing the *Send new Message* button.
+The connection settings are used when connecting to the peer network. More on this later on.
+
+The chat message box will show all the messages that your node has sent or relayed. The brightly colored circle shows how many nodes the message has traversed before reaching to the current node ("hop count"). Value of 0 means that this node composed the message. The color of the circle also changes from warm red into blueish tones the more peers were in between us and the original sender.
+
+The *Received* chat bubble should show the message as it was when it reached our node. On the contrary, the *Sent* bubble should show the message as it was when it left (refined) our node and was sent to neighbouring peers. When composing a new message, we naturally did not receive the message from any other peer, thus the *Received* bubble will show *(none)*.
+
+The node shown in the screen shot has composed and sent a new message by itself (Hello!) and also received, refined and relied another message ("No terveppä terve").
+
+In order to compose a new message to the peer network, it should work by inputting the message to the bottom text box and clicking on the *Send message* button.
+
 
 ### Network options
 
@@ -98,7 +107,7 @@ The Refiner class contains methods for specifying how to modify the text content
 
 ### Message.java
 
-The objects created from Message class should contain the message contents (the text) to be transmitted, as well as the current "color" of the message. Each message should also have their own ID. Message class objects are used to transmit the "whispers" over the network, thus the class should implement a specific interface in order to be able to be sent over a network using ObjectStreams!
+The objects created from Message class should contain the message contents (the text) to be transmitted, as well as the amount of peers the message has gone through to reach this node (hop count). Each message should also have their own ID. Message class objects are used to transmit the "whispers" over the network, thus the class should implement a specific interface in order to be able to be sent over a network using ObjectStreams!
 
 Hint: The message ID can be used to prevent retransmission: if a message tagged with the same ID is received again, it can be thrown in the trash...
 
@@ -135,10 +144,10 @@ Needless to say, writing this class is a big part of the assignment. As an addit
 	- Changes are made to the `NetworkService` class, and to any new classes you see fit
 - Modify the Message class so that
 	- It can be sent over the network using the `ObjectOutputStream` class
-	- Also add the necessary attributes to the class in order to be able to send the message contents (as string) and the color information (as integer) with the object. In addition, each message must have a UUID-based identifier so that peers can recognize if the message has already been visited by them.
+	- Also add the necessary attributes to the class in order to be able to send the message contents (as string) and the amount of nodes that the message has been passed so far (hops). In addition, each message must have a UUID-based identifier so that peers can recognize if the message has already been visited by them.
 - Implement methods to MessageBroker to get the objects received from the network by your Network component to the MessageBroker side, and process the received Message objects so that
-	1. Message and color are edited in Refiner
-	2. The received message and the edited message and color are displayed in the UI
+	1. Message is edited in Refiner
+	2. The received message and the edited message and hop count are displayed in the UI
 	3. The edited message is sent to all neighbours
 		- Once a message has been sent, it will not be processed again and will not be forwarded if someone sends it back (ID attribute of the Message object will be probably useful here)
 - Implement a message modification method in the Refiner class to mutate the text content of messages (Optional)
