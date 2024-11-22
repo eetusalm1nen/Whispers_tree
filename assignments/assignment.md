@@ -60,7 +60,7 @@ In order to compose a new message to the peer network, it should work by inputti
 
 ### Network options
 
-Before messages can be sent, received or forwarded, the program needs to be connected to another running program (peer), or at least wait for another program to connect to us: playing with a broken phone on its own gets boring after a while.
+Before messages can be sent, received or forwarded, the program needs to be connected to another running program (peer), or at least wait for another program to connect to us: playing with Whispers alone gets boring after a while.
 
 Two different modes are defined in the template: *localhost mode* and *public network mode*. These affect which port and address information is distributed by the Resolver and thus the peer-to-peer network structure. If *localhost* is selected, the communication is between different ports on your own computer. This mode is suitable for testing when developing a program on a single machine. In this mode, the resolver always returns the data of the peer that connected to the resolver most recently, forming kind of a peer-to-peer network resembing a "line" or "queue". In *Public network mode*, communication will happen between different IP addresses, each listening on the same port number, and requires the use of several computers on the same network. It only works over a single subnet, and therefore does not work over, for example, the public internet. In *Public network mode*, the Reolver distributes addresses in such a way that the peer network is binary in structure.
 
