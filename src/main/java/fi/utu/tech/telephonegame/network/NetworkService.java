@@ -79,6 +79,7 @@ public class NetworkService extends Thread implements Network {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		// Handling connections in a new thread
 		new Thread(new Connector(socket)).start();
     }
 
@@ -98,7 +99,7 @@ public class NetworkService extends Thread implements Network {
 				System.out.println("Message sent");
 			}
 		} else {
-			System.out.println("No recipient, clearing outcoming messages");
+			System.out.println("No recipient, clearing outgoing messages");
 			outputList.clear();
 		}
 	}
