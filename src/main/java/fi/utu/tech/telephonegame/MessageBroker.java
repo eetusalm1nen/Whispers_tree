@@ -1,7 +1,9 @@
 package fi.utu.tech.telephonegame;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.UnknownHostException;
+import java.util.Objects;
 import java.util.UUID;
 import fi.utu.tech.telephonegame.network.Network;
 import fi.utu.tech.telephonegame.network.NetworkService;
@@ -62,9 +64,33 @@ public class MessageBroker extends Thread {
 	 * @return The message processed in the aforementioned ways
 	 * 
 	 */
-	private Message process(Object procMessage) {
+	private Message process(Object procMessage) throws IllegalAccessException {
 		// TODO
-		return null;
+		Message message;
+		System.out.println("Testing the type of incoming object:");
+		if (procMessage instanceof Message) {
+			message = (Message) procMessage;
+		} else {
+			System.out.println("Failed");
+			throw new IllegalAccessException("Invalid object type:" + procMessage.getClass().getName());
+		}
+		System.out.println("Passed");
+		System.out.println("Message is not already processed:");
+		if (!prevMessages.containsKey(message.getId())) {
+			prevMessages.put(message.getId());
+			System.out.println("Passed");
+			String oldMessage = message.getMessage();
+			System.out.println("Refining the message: " + oldMessage);
+			String refinedText = Refiner.refineText(oldMessage);
+			System.out.println("Refined text: " + refinedText);
+			message.setMessage(refinedText);
+			message.addHop();
+			gui_io.addMessageToChatBox(oldMessage, refinedText, message.getHopCount());
+			return message;
+		} else {
+			System.out.println("Failed");
+			return null;
+		}
 	}
 
 	/**
@@ -81,6 +107,22 @@ public class MessageBroker extends Thread {
 	 */
 	public void run() {
 		// TODO
+		Object inputMsg;
+		while (true) {
+            try {
+                inputMsg = network.retrieveMessage();
+				System.out.println("1. Retrieved an object offered by network package");
+				System.out.println("The message object: " + inputMsg + "\n");
+				if (inputMsg != null) {
+					System.out.println("2. Starting message object processing");
+					Message processedMsg = process(inputMsg);
+					System.out.println("\n3. Sending processed message back to network");
+					network.postMessage(processedMsg);
+				}
+            } catch (InterruptedException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+		}
 	}
 
 	/**
@@ -90,7 +132,7 @@ public class MessageBroker extends Thread {
 	 * You need to make changes here
 	 * @param message The Message object to be sent
 	 */
-	public void send(Message message) {
+	public void send(Message message) throws InterruptedException {
 		// TODO
 		/*
 		 * Currently sending null to suppress errors
@@ -100,7 +142,9 @@ public class MessageBroker extends Thread {
 		 * need to make it implement something to make postMessage
 		 * satisfied. Do not change the Network interface though.
 		 */
-		network.postMessage(null);
+		// Fixed: Now sending Message objects
+		System.out.println("Posting message: " + message.getMessage());
+		network.postMessage(message);
 	}
 
 	/**
@@ -111,7 +155,12 @@ public class MessageBroker extends Thread {
 	 */
 	public void send(String text) {
 		Message message = new Message(text, 0);
-		this.send(message);
+		try {
+			this.send(message);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			System.out.println("virhe");
+		}
 	}
 
 	/*

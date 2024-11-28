@@ -1,8 +1,21 @@
 package fi.utu.tech.telephonegame.network;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
+
+import static java.util.Collections.synchronizedList;
 
 /**
  * A concrete implementation of Network interface.
@@ -16,7 +29,9 @@ import java.net.UnknownHostException;
  * to be able to implement all the required functionality
  */
 public class NetworkService extends Thread implements Network {
-
+	private final List<ObjectOutputStream> osList = synchronizedList(new ArrayList<>());
+	private final LinkedBlockingQueue<Serializable> outputList = new LinkedBlockingQueue<>(5);
+	private final LinkedBlockingQueue<Serializable> inputList = new LinkedBlockingQueue<>(5);
 	/*
 	 * No need to change the construtor
 	 */
@@ -34,8 +49,16 @@ public class NetworkService extends Thread implements Network {
 	 * 
 	 */
 	public void startListening(int serverPort) {
-		System.out.printf("I should start listening for new peers at TCP port %d%n", serverPort);
-		// TODO
+        System.out.printf("I should start listening for new peers at TCP port %d%n", serverPort);
+        // TODO
+        ServerSocket serverSocket = null;
+        try {
+            serverSocket = new ServerSocket(serverPort);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+		// Accepting incoming connections in a new thread
+        new Thread(new Listener(serverSocket)).start();
 	}
 
 	/**
@@ -50,7 +73,14 @@ public class NetworkService extends Thread implements Network {
 	public void connect(String peerIP, int peerPort) throws IOException, UnknownHostException {
 		System.out.printf("I should connect myself to %s, TCP port %d%n", peerIP, peerPort);
 		// TODO
-	}
+		Socket socket = null;
+		try {
+			socket = new Socket(peerIP, peerPort);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		new Thread(new Connector(socket)).start();
+    }
 
 	/**
 	 * This method is used to send the message to all connected neighbours (directly connected nodes)
@@ -58,9 +88,19 @@ public class NetworkService extends Thread implements Network {
 	 * @param out The serializable object to be sent to all the connected nodes
 	 * 
 	 */
-	private void sendToNeighbours(Serializable out) {
+	private void sendToNeighbours(Serializable out) throws IOException {
 		// Send the object to all neighbouring nodes
 		// TODO
+		if (!osList.isEmpty()) {
+			for (ObjectOutputStream value : osList) {
+				value.writeObject(out);
+				value.flush();
+				System.out.println("Message sent");
+			}
+		} else {
+			System.out.println("No recipient, clearing outcoming messages");
+			outputList.clear();
+		}
 	}
 	
 	/**
@@ -75,6 +115,11 @@ public class NetworkService extends Thread implements Network {
 	 */
 	public void postMessage(Serializable out) {
 		//TODO
+		try {
+			outputList.put(out);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -88,7 +133,11 @@ public class NetworkService extends Thread implements Network {
 	 */
 	public Object retrieveMessage() throws InterruptedException {
 		//TODO
-		return null;
+		if (inputList != null) {
+            return inputList.take();
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -103,16 +152,69 @@ public class NetworkService extends Thread implements Network {
 	 */
 	public void run() {
 		// TODO
-		/*
+
 		while (true) {
 			try {
 				// We do not have structure (yet) where messages being sent are spooled
-				sendToNeighbours(???);
-			} catch (InterruptedException e) {
+				if (outputList != null && osList != null) {
+					Serializable toBeSent = outputList.take();
+					sendToNeighbours(toBeSent);
+				}
+			} catch (InterruptedException | IOException e) {
 				e.printStackTrace();
 			}
 		}
-		*/
+
+	}
+	public class Listener extends Thread {
+		private ServerSocket socket;
+		public Listener(ServerSocket socket) {
+			this.socket = socket;
+		}
+		public void run () {
+			while (true) {
+                Socket clientSocket = null;
+                try {
+					clientSocket = socket.accept();
+					ObjectOutputStream os = new ObjectOutputStream(clientSocket.getOutputStream());
+					osList.add(os);
+				} catch (SocketException e) {
+					System.out.println("waaaa");
+					if (socket.isClosed()) {
+						System.out.println("piupau");
+					}
+                } catch (IOException e ) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("New client connected: " + clientSocket.getInetAddress());
+			}
+		}
+	}
+	public class Connector extends Thread {
+		private Socket socket;
+		public Connector(Socket socket) {
+			this.socket = socket;
+		}
+		public void run () {
+			ObjectInputStream is = null;
+			try {
+				System.out.println("New server connected: " + socket.getInetAddress());
+				is = new ObjectInputStream(socket.getInputStream());
+			} catch (IOException e) {
+				System.out.println("virhe");
+			}
+			while (true) {
+				try {
+                    assert is != null;
+                    Serializable receivedObject = (Serializable) is.readObject();
+					System.out.println("Received an object from the server\n");
+					inputList.put(receivedObject);
+				} catch (IOException | InterruptedException | ClassNotFoundException e) {
+					System.out.println("waaaa");
+					System.out.println(e);
+				}
+			}
+		}
 	}
 
 }

@@ -1,5 +1,6 @@
 package fi.utu.tech.telephonegame;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -20,8 +21,10 @@ import java.util.UUID;
  * 
  */
 
-public final class Message  {
-
+public final class Message implements Serializable {
+	UUID id;
+	String message;
+	int hopCount;
 	// TODO: Missing attributes
 
 	public Message(String message, Integer hopCount) {
@@ -30,6 +33,19 @@ public final class Message  {
 
 	public Message(UUID id, String message, Integer hopCount) {
 		// TODO
+		this.id = id;
+		this.message = message;
+		this.hopCount = hopCount;
 	}
+	public UUID getId() { return id; }
+	public String getMessage() { return message; }
+	public int getHopCount() { return hopCount; }
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	public void addHop() {
+		this.hopCount = hopCount + 1;
+	}
+
 
 }
