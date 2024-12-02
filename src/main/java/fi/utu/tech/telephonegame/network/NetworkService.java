@@ -167,6 +167,9 @@ public class NetworkService extends Thread implements Network {
 		}
 
 	}
+	/**
+	 * Accepting incoming connections in a new thread
+	 */
 	public class Listener extends Thread {
 		private ServerSocket socket;
 		public Listener(ServerSocket socket) {
@@ -191,6 +194,9 @@ public class NetworkService extends Thread implements Network {
 			}
 		}
 	}
+	/**
+	 * Handling connections in a new thread
+	 */
 	public class Connector extends Thread {
 		private Socket socket;
 		public Connector(Socket socket) {
@@ -205,8 +211,8 @@ public class NetworkService extends Thread implements Network {
 				System.out.println("virhe");
 			}
 			while (true) {
-				try {
-                    assert is != null;
+				assert is != null;
+                try {
                     Serializable receivedObject = (Serializable) is.readObject();
 					System.out.println("Received an object from the server\n");
 					inputList.put(receivedObject);

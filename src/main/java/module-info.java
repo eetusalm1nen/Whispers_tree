@@ -3,8 +3,9 @@ module telephonegame {
 	requires javafx.fxml;
 	requires transitive javafx.graphics;
 	requires javafx.base;
+    requires org.apache.commons.text;
 
-	opens fi.utu.tech.telephonegame to javafx.fxml;
+    opens fi.utu.tech.telephonegame to javafx.fxml;
 	opens fi.utu.tech.telephonegame.ui to javafx.fxml;
 
 	exports fi.utu.tech.telephonegame.ui;

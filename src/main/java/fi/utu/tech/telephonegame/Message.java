@@ -1,5 +1,6 @@
 package fi.utu.tech.telephonegame;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -22,9 +23,11 @@ import java.util.UUID;
  */
 
 public final class Message implements Serializable {
-	UUID id;
-	String message;
-	int hopCount;
+	@Serial
+	private static final long serialVersionUID = 1L;
+	private final UUID id;
+	private String message;
+	private int hopCount;
 	// TODO: Missing attributes
 
 	public Message(String message, Integer hopCount) {
