@@ -116,6 +116,11 @@ public class MessageBroker extends Thread {
 				if (inputMsg != null) {
 					System.out.println("2. Starting message object processing");
 					Message processedMsg = process(inputMsg);
+					// If message is processed don't send it again
+					if (processedMsg == null) {
+						System.out.println("Message already processed");
+						continue;
+					}
 					System.out.println("\n3. Sending processed message back to network");
 					network.postMessage(processedMsg);
 				}
@@ -144,6 +149,8 @@ public class MessageBroker extends Thread {
 		 */
 		// Fixed: Now sending Message objects
 		System.out.println("Posting message: " + message.getMessage());
+		// We have had this message already
+		prevMessages.put(message.getId());
 		network.postMessage(message);
 	}
 

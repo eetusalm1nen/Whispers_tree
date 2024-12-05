@@ -74,8 +74,13 @@ public class NetworkService extends Thread implements Network {
 		System.out.printf("I should connect myself to %s, TCP port %d%n", peerIP, peerPort);
 		// TODO
 		Socket socket = null;
+		//Lisätty
+		ObjectOutputStream os = null;
 		try {
 			socket = new Socket(peerIP, peerPort);
+			//Lisätty
+			os = new ObjectOutputStream(socket.getOutputStream());
+			osList.add(os);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -93,10 +98,13 @@ public class NetworkService extends Thread implements Network {
 		// Send the object to all neighbouring nodes
 		// TODO
 		if (!osList.isEmpty()) {
-			for (ObjectOutputStream value : osList) {
-				value.writeObject(out);
-				value.flush();
-				System.out.println("Message sent");
+			// Added a synchronized block
+			synchronized (this) {
+				for (ObjectOutputStream value : osList) {
+					value.writeObject(out);
+					value.flush();
+					System.out.println("Message sent");
+				}
 			}
 		} else {
 			System.out.println("No recipient, clearing outgoing messages");
@@ -182,6 +190,8 @@ public class NetworkService extends Thread implements Network {
 					clientSocket = socket.accept();
 					ObjectOutputStream os = new ObjectOutputStream(clientSocket.getOutputStream());
 					osList.add(os);
+					//lisätty
+					new Thread(new Connector(clientSocket)).start();
 				} catch (SocketException e) {
 					System.out.println("waaaa");
 					if (socket.isClosed()) {
@@ -207,8 +217,9 @@ public class NetworkService extends Thread implements Network {
 			try {
 				System.out.println("New server connected: " + socket.getInetAddress());
 				is = new ObjectInputStream(socket.getInputStream());
+
 			} catch (IOException e) {
-				System.out.println("virhe");
+				System.out.println("virheeee");
 			}
 			while (true) {
 				assert is != null;
